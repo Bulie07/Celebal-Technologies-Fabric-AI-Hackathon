@@ -1,0 +1,510 @@
+{
+    "name": "Pipeline to load salesdata",
+    "objectId": "1e8c6e8c-f8b5-44e3-ab4d-4af0619ac0d9",
+    "properties": {
+        "activities": [
+            {
+                "name": "Get names of files in ADLS",
+                "type": "GetMetadata",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "fieldList": [
+                        "childItems"
+                    ],
+                    "datasetSettings": {
+                        "annotations": [],
+                        "type": "DelimitedText",
+                        "typeProperties": {
+                            "location": {
+                                "type": "AzureBlobStorageLocation",
+                                "container": "input"
+                            },
+                            "columnDelimiter": ",",
+                            "escapeChar": "\\",
+                            "firstRowAsHeader": true,
+                            "quoteChar": "\""
+                        },
+                        "schema": [],
+                        "externalReferences": {
+                            "connection": "7a679ca0-9ab4-4d22-b254-2a2abbb13295"
+                        }
+                    },
+                    "storeSettings": {
+                        "type": "AzureBlobStorageReadSettings",
+                        "recursive": true,
+                        "enablePartitionDiscovery": false
+                    },
+                    "formatSettings": {
+                        "type": "DelimitedTextReadSettings"
+                    }
+                }
+            },
+            {
+                "name": "ForEach to copy the new files one by one",
+                "type": "ForEach",
+                "dependsOn": [
+                    {
+                        "activity": "Lookup to get the new file names",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "typeProperties": {
+                    "items": {
+                        "value": "@activity('Lookup to get the new file names').output.value",
+                        "type": "Expression"
+                    },
+                    "activities": [
+                        {
+                            "name": "Copy data into main table",
+                            "type": "Copy",
+                            "dependsOn": [],
+                            "policy": {
+                                "timeout": "0.12:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "typeProperties": {
+                                "source": {
+                                    "type": "DelimitedTextSource",
+                                    "storeSettings": {
+                                        "type": "AzureBlobStorageReadSettings",
+                                        "recursive": true,
+                                        "enablePartitionDiscovery": false
+                                    },
+                                    "formatSettings": {
+                                        "type": "DelimitedTextReadSettings"
+                                    },
+                                    "datasetSettings": {
+                                        "annotations": [],
+                                        "type": "DelimitedText",
+                                        "typeProperties": {
+                                            "location": {
+                                                "type": "AzureBlobStorageLocation",
+                                                "fileName": {
+                                                    "value": "@item().Filename",
+                                                    "type": "Expression"
+                                                },
+                                                "container": "input"
+                                            },
+                                            "columnDelimiter": ",",
+                                            "escapeChar": "\\",
+                                            "firstRowAsHeader": true,
+                                            "quoteChar": "\""
+                                        },
+                                        "schema": [],
+                                        "externalReferences": {
+                                            "connection": "7a679ca0-9ab4-4d22-b254-2a2abbb13295"
+                                        }
+                                    }
+                                },
+                                "sink": {
+                                    "type": "LakehouseTableSink",
+                                    "tableActionOption": "Append",
+                                    "datasetSettings": {
+                                        "annotations": [],
+                                        "linkedService": {
+                                            "name": "Hackathon_lakehouse_celebal",
+                                            "properties": {
+                                                "annotations": [],
+                                                "type": "Lakehouse",
+                                                "typeProperties": {
+                                                    "workspaceId": "5bd6a6a0-b569-407e-9384-117536494aba",
+                                                    "artifactId": "a9c54042-fe4a-4a1f-89e6-c8cb544925ab",
+                                                    "rootFolder": "Tables"
+                                                }
+                                            }
+                                        },
+                                        "type": "LakehouseTable",
+                                        "schema": [],
+                                        "typeProperties": {
+                                            "table": "salesdata"
+                                        }
+                                    }
+                                },
+                                "enableStaging": false,
+                                "translator": {
+                                    "type": "TabularTranslator",
+                                    "mappings": [
+                                        {
+                                            "source": {
+                                                "name": "InvoiceNo",
+                                                "type": "String",
+                                                "physicalType": "String"
+                                            },
+                                            "sink": {
+                                                "name": "InvoiceNo",
+                                                "physicalType": "string"
+                                            }
+                                        },
+                                        {
+                                            "source": {
+                                                "name": "InvoiceDate",
+                                                "type": "String",
+                                                "physicalType": "String"
+                                            },
+                                            "sink": {
+                                                "name": "InvoiceDate",
+                                                "physicalType": "string"
+                                            }
+                                        },
+                                        {
+                                            "source": {
+                                                "name": "CustomerID",
+                                                "type": "String",
+                                                "physicalType": "String"
+                                            },
+                                            "sink": {
+                                                "name": "CustomerID",
+                                                "physicalType": "string"
+                                            }
+                                        },
+                                        {
+                                            "source": {
+                                                "name": "CustomerName",
+                                                "type": "String",
+                                                "physicalType": "String"
+                                            },
+                                            "sink": {
+                                                "name": "CustomerName",
+                                                "physicalType": "string"
+                                            }
+                                        },
+                                        {
+                                            "source": {
+                                                "name": "City",
+                                                "type": "String",
+                                                "physicalType": "String"
+                                            },
+                                            "sink": {
+                                                "name": "City",
+                                                "physicalType": "string"
+                                            }
+                                        },
+                                        {
+                                            "source": {
+                                                "name": "Age",
+                                                "type": "String",
+                                                "physicalType": "String"
+                                            },
+                                            "sink": {
+                                                "name": "Age",
+                                                "physicalType": "string"
+                                            }
+                                        },
+                                        {
+                                            "source": {
+                                                "name": "Occupation",
+                                                "type": "String",
+                                                "physicalType": "String"
+                                            },
+                                            "sink": {
+                                                "name": "Occupation",
+                                                "physicalType": "string"
+                                            }
+                                        },
+                                        {
+                                            "source": {
+                                                "name": "Description",
+                                                "type": "String",
+                                                "physicalType": "String"
+                                            },
+                                            "sink": {
+                                                "name": "Description",
+                                                "physicalType": "string"
+                                            }
+                                        },
+                                        {
+                                            "source": {
+                                                "name": "Price",
+                                                "type": "String",
+                                                "physicalType": "String"
+                                            },
+                                            "sink": {
+                                                "name": "Price",
+                                                "physicalType": "string"
+                                            }
+                                        },
+                                        {
+                                            "source": {
+                                                "name": "Category",
+                                                "type": "String",
+                                                "physicalType": "String"
+                                            },
+                                            "sink": {
+                                                "name": "Category",
+                                                "physicalType": "string"
+                                            }
+                                        },
+                                        {
+                                            "source": {
+                                                "name": "ValueShopping",
+                                                "type": "String",
+                                                "physicalType": "String"
+                                            },
+                                            "sink": {
+                                                "name": "ValueShopping",
+                                                "physicalType": "string"
+                                            }
+                                        },
+                                        {
+                                            "source": {
+                                                "name": "AdventureShopping",
+                                                "type": "String",
+                                                "physicalType": "String"
+                                            },
+                                            "sink": {
+                                                "name": "AdventureShopping",
+                                                "physicalType": "string"
+                                            }
+                                        },
+                                        {
+                                            "source": {
+                                                "name": "RoleShopping",
+                                                "type": "String",
+                                                "physicalType": "String"
+                                            },
+                                            "sink": {
+                                                "name": "RoleShopping",
+                                                "physicalType": "string"
+                                            }
+                                        },
+                                        {
+                                            "source": {
+                                                "name": "SocialShopping",
+                                                "type": "String",
+                                                "physicalType": "String"
+                                            },
+                                            "sink": {
+                                                "name": "SocialShopping",
+                                                "physicalType": "string"
+                                            }
+                                        },
+                                        {
+                                            "source": {
+                                                "name": "IdeaShopping",
+                                                "type": "String",
+                                                "physicalType": "String"
+                                            },
+                                            "sink": {
+                                                "name": "IdeaShopping",
+                                                "physicalType": "string"
+                                            }
+                                        },
+                                        {
+                                            "source": {
+                                                "name": "RelaxationShopping",
+                                                "type": "String",
+                                                "physicalType": "String"
+                                            },
+                                            "sink": {
+                                                "name": "RelaxationShopping",
+                                                "physicalType": "string"
+                                            }
+                                        },
+                                        {
+                                            "source": {
+                                                "name": "AdventureAndSocial",
+                                                "type": "String",
+                                                "physicalType": "String"
+                                            },
+                                            "sink": {
+                                                "name": "AdventureAndSocial",
+                                                "physicalType": "string"
+                                            }
+                                        },
+                                        {
+                                            "source": {
+                                                "name": "ValueAndRole",
+                                                "type": "String",
+                                                "physicalType": "String"
+                                            },
+                                            "sink": {
+                                                "name": "ValueAndRole",
+                                                "physicalType": "string"
+                                            }
+                                        },
+                                        {
+                                            "source": {
+                                                "name": "IdeaAndRelaxation",
+                                                "type": "String",
+                                                "physicalType": "String"
+                                            },
+                                            "sink": {
+                                                "name": "IdeaAndRelaxation",
+                                                "physicalType": "string"
+                                            }
+                                        }
+                                    ],
+                                    "typeConversion": true,
+                                    "typeConversionSettings": {
+                                        "allowDataTruncation": true,
+                                        "treatBooleanAsNumber": false
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Append filename to copiedfiles table",
+                            "type": "SqlServerStoredProcedure",
+                            "dependsOn": [
+                                {
+                                    "activity": "Copy data into main table",
+                                    "dependencyConditions": [
+                                        "Succeeded"
+                                    ]
+                                }
+                            ],
+                            "policy": {
+                                "timeout": "0.12:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "typeProperties": {
+                                "storedProcedureName": "[dbo].[copiedfileload]",
+                                "storedProcedureParameters": {
+                                    "filename": {
+                                        "value": {
+                                            "value": "@item().Filename",
+                                            "type": "Expression"
+                                        },
+                                        "type": "String"
+                                    }
+                                }
+                            },
+                            "linkedService": {
+                                "name": "Hackathon_warehouse_celebal",
+                                "objectId": "f456b4a3-3014-431f-95ad-546ba9741d41",
+                                "properties": {
+                                    "annotations": [],
+                                    "type": "DataWarehouse",
+                                    "typeProperties": {
+                                        "endpoint": "hbaohza75kbernxiztlxmrm4ua-uctnmw3jwv7ebe4ecf2tmskkxi.datawarehouse.fabric.microsoft.com",
+                                        "artifactId": "f456b4a3-3014-431f-95ad-546ba9741d41"
+                                    },
+                                    "tridentArtifactType": "DataWarehouse"
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "ForEach to get the file names one by one",
+                "type": "ForEach",
+                "dependsOn": [
+                    {
+                        "activity": "Get names of files in ADLS",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "typeProperties": {
+                    "items": {
+                        "value": "@activity('Get names of files in ADLS').output.childItems",
+                        "type": "Expression"
+                    },
+                    "activities": [
+                        {
+                            "name": "Append all file names to table Allfiles",
+                            "type": "SqlServerStoredProcedure",
+                            "dependsOn": [],
+                            "policy": {
+                                "timeout": "0.12:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "typeProperties": {
+                                "storedProcedureName": "[dbo].[allFileLoad]",
+                                "storedProcedureParameters": {
+                                    "filename": {
+                                        "value": {
+                                            "value": "@item().name",
+                                            "type": "Expression"
+                                        },
+                                        "type": "String"
+                                    }
+                                }
+                            },
+                            "linkedService": {
+                                "name": "Hackathon_warehouse_celebal",
+                                "objectId": "f456b4a3-3014-431f-95ad-546ba9741d41",
+                                "properties": {
+                                    "annotations": [],
+                                    "type": "DataWarehouse",
+                                    "typeProperties": {
+                                        "endpoint": "hbaohza75kbernxiztlxmrm4ua-uctnmw3jwv7ebe4ecf2tmskkxi.datawarehouse.fabric.microsoft.com",
+                                        "artifactId": "f456b4a3-3014-431f-95ad-546ba9741d41"
+                                    },
+                                    "tridentArtifactType": "DataWarehouse"
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "Lookup to get the new file names",
+                "type": "Lookup",
+                "dependsOn": [
+                    {
+                        "activity": "ForEach to get the file names one by one",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "source": {
+                        "type": "DataWarehouseSource",
+                        "sqlReaderQuery": "select a.Filename from Hackathon_warehouse.dbo.Allfiles a\nleft join Hackathon_warehouse.dbo.copiedfiles b\non a.Filename = b.Filename\nwhere b.Filename is null;",
+                        "queryTimeout": "02:00:00",
+                        "partitionOption": "None"
+                    },
+                    "firstRowOnly": false,
+                    "datasetSettings": {
+                        "annotations": [],
+                        "linkedService": {
+                            "name": "Hackathon_warehouse_celebal",
+                            "properties": {
+                                "annotations": [],
+                                "type": "DataWarehouse",
+                                "typeProperties": {
+                                    "endpoint": "hbaohza75kbernxiztlxmrm4ua-uctnmw3jwv7ebe4ecf2tmskkxi.datawarehouse.fabric.microsoft.com",
+                                    "artifactId": "f456b4a3-3014-431f-95ad-546ba9741d41"
+                                }
+                            }
+                        },
+                        "type": "DataWarehouseTable",
+                        "schema": []
+                    }
+                }
+            }
+        ],
+        "annotations": [],
+        "lastModifiedByObjectId": "41c24456-ccd0-4988-a86a-b948544e37d7",
+        "lastPublishTime": "2024-03-03T12:13:22Z"
+    }
+}
