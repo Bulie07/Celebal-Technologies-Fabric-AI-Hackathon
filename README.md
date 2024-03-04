@@ -33,6 +33,10 @@ Azure OpenAI's Steps Followed:
 
 ![image](https://github.com/Bulie07/Celebal-Technologies-Fabric-AI-Hackathon/assets/91520647/162b453c-e8f7-442d-9fa9-04e9b18fb81f)
 
+Workspace Preview:
+
+![image](https://github.com/Bulie07/Celebal-Technologies-Fabric-AI-Hackathon/assets/91520647/b32703fc-4243-406c-a410-9113a42743e1)
+
 
 Data Activator:
 
