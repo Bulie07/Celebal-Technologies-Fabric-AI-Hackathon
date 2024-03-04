@@ -1,5 +1,14 @@
 # Celebal-Technologies-Fabric-AI-Hackathon
 
+Here's the link to the word document comprising of the problem statement as well as the solution:
+
+https://celebaltech-my.sharepoint.com/:x:/p/shivam_gaur1/ETwNAhu3eOpCmLsx1FCX0bgBX6EI4q2KLVxK5ZCo0S04ig?e=bW3nCk
+
+Here's the link to the dataset:
+
+https://celebaltech-my.sharepoint.com/:x:/p/shivam_gaur1/ETwNAhu3eOpCmLsx1FCX0bgBX6EI4q2KLVxK5ZCo0S04ig?e=ZGvs31
+
+
 
 Fabric's Data factory Pipeline:
 
