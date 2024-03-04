@@ -1,7 +1,6 @@
 # Celebal-Technologies-Fabric-AI-Hackathon
 
 
-
 Fabric's Data factory Pipeline:
 
 1. Created a lakehouse named "hackathon_lakehouse_celebal."
@@ -15,6 +14,7 @@ Fabric's Data factory Pipeline:
 
 
 Pipeline explained:
+
 1. Utilized the "Get Metadata" activity to retrieve file names from Azure Data Lake Storage (ADLS). A "ForEach" loop, initiated by the "Get Metadata" output, executed a stored procedure within, adding these file names to the "Allfiles" table.
 
 2. To manage already processed files, our data fabric warehouse includes the "Copiedfiles" table. A "Lookup" activity was deployed to discern unprocessed files by comparing "Allfiles" and "Copiedfiles" tables.
@@ -40,6 +40,7 @@ We also plan to integrate Microsoft Fabric’s Data Activator’s capabilities i
 
 
 Power bi report:
+
 We have also generated a power bi report using the auto create report feature of microsoft fabric on our warehouse's semantics model.
 
 ![image](https://github.com/Bulie07/Celebal-Technologies-Fabric-AI-Hackathon/assets/91520647/121b675d-105c-4732-a94b-391aa9867e44)
