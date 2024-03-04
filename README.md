@@ -31,6 +31,7 @@ Azure OpenAI's Steps Followed:
 
 3.In the next step, we used Azure OpenAI's GPT-35-Turbo model, wherein we created a prompt which is about using detailed customer data to write a personalized and engaging marketing email that adheres to a set of creative and strategic guidelines, aiming to appeal to the customer's preferences and shopping habits.
 
+![image](https://github.com/Bulie07/Celebal-Technologies-Fabric-AI-Hackathon/assets/91520647/162b453c-e8f7-442d-9fa9-04e9b18fb81f)
 
 
 Data Activator:
@@ -41,4 +42,5 @@ We also plan to integrate Microsoft Fabric’s Data Activator’s capabilities i
 Power bi report:
 We have also generated a power bi report using the auto create report feature of microsoft fabric on our warehouse's semantics model.
 
+![image](https://github.com/Bulie07/Celebal-Technologies-Fabric-AI-Hackathon/assets/91520647/121b675d-105c-4732-a94b-391aa9867e44)
 
