@@ -11,6 +11,9 @@ Fabric's Data factory Pipeline:
 5. Developed the pipeline architecture.
 
 
+![image](https://github.com/Bulie07/Celebal-Technologies-Fabric-AI-Hackathon/assets/91520647/1480742f-7a91-4793-af39-800307c67001)
+
+
 Pipeline explained:
 1. Utilized the "Get Metadata" activity to retrieve file names from Azure Data Lake Storage (ADLS). A "ForEach" loop, initiated by the "Get Metadata" output, executed a stored procedure within, adding these file names to the "Allfiles" table.
 
